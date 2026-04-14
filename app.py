@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from io import BytesIO
 
-# ── Page config ──────────────────────────────────────────────────────────────
+# ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Thống kê thuế cơ sở",
     page_icon="🌚",
@@ -13,122 +13,176 @@ st.set_page_config(
 # ── Custom CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'Be Vietnam Pro', sans-serif;
 }
 
-/* Main background */
+/* ── Background: clean light grey ── */
 .stApp {
-    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    background: #f2f5f9;
     min-height: 100vh;
 }
 
-/* Title */
-h1 {
-    color: #e0f7fa !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.5px;
-    text-align: center;
-    padding-bottom: 4px;
+/* ── Top header bar ── */
+header[data-testid="stHeader"] {
+    background: #ffffff;
+    border-bottom: 3px solid #0077b6;
 }
 
-/* Subtitle */
+/* ── Title ── */
+h1 {
+    color: #05151f !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.8px;
+    text-align: center;
+}
+
+/* ── Subtitle ── */
 .subtitle {
     text-align: center;
-    color: #80cbc4;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
-    margin-top: -0.5rem;
+    color: #1e4060;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1.8rem;
+    margin-top: -0.3rem;
 }
 
-/* Card wrapper */
+/* ── White card ── */
 .card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px;
-    padding: 2rem 2.5rem;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    margin-bottom: 1.5rem;
+    background: #ffffff;
+    border: 1px solid #b8cfe0;
+    border-radius: 14px;
+    padding: 1.8rem 2.2rem;
+    box-shadow: 0 2px 12px rgba(0,80,140,0.07);
+    margin-bottom: 1.4rem;
 }
 
-/* File uploader tweak */
+/* ── Section headers h3 ── */
+h3 {
+    color: #05151f !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
+}
+
+/* ── Body text / markdown ── */
+p, li, .stMarkdown p {
+    color: #0f2a3f !important;
+    font-weight: 500;
+    line-height: 1.75;
+}
+
+strong {
+    color: #05151f !important;
+    font-weight: 700;
+}
+
+/* ── File uploader ── */
 [data-testid="stFileUploader"] {
-    border: 2px dashed #4dd0e1 !important;
-    border-radius: 12px !important;
-    padding: 1rem !important;
-    background: rgba(77, 208, 225, 0.05) !important;
+    border: 2px dashed #0096c7 !important;
+    border-radius: 10px !important;
+    background: #eef7fc !important;
+    padding: 0.6rem !important;
+}
+[data-testid="stFileUploader"] p,
+[data-testid="stFileUploader"] span,
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploader"] div {
+    color: #0a2e47 !important;
+    font-weight: 600 !important;
 }
 
-/* Button */
+/* ── Primary button ── */
 .stButton > button {
-    background: linear-gradient(90deg, #00b4d8, #0077b6) !important;
-    color: white !important;
+    background: linear-gradient(90deg, #0077b6, #00b4d8) !important;
+    color: #ffffff !important;
     border: none !important;
     border-radius: 10px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     font-size: 1rem !important;
-    padding: 0.65rem 2.5rem !important;
-    letter-spacing: 0.3px;
-    transition: opacity 0.2s;
+    padding: 0.7rem 2rem !important;
     width: 100%;
+    box-shadow: 0 4px 14px rgba(0,119,182,0.28);
+    transition: box-shadow 0.2s, transform 0.15s;
 }
 .stButton > button:hover {
-    opacity: 0.88 !important;
+    box-shadow: 0 6px 20px rgba(0,119,182,0.4) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Download button */
+/* ── Download button ── */
 [data-testid="stDownloadButton"] > button {
-    background: linear-gradient(90deg, #43e97b, #38f9d7) !important;
-    color: #0d1b2a !important;
+    background: linear-gradient(90deg, #00916e, #00c896) !important;
+    color: #ffffff !important;
     border: none !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
     font-size: 1rem !important;
-    padding: 0.65rem 2.5rem !important;
+    padding: 0.7rem 2rem !important;
     width: 100%;
+    box-shadow: 0 4px 14px rgba(0,145,110,0.28);
 }
 
-/* Metrics */
+/* ── Metric cards ── */
 [data-testid="metric-container"] {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 1rem;
+    background: #ffffff !important;
+    border: 1px solid #a8c8e0 !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    box-shadow: 0 2px 8px rgba(0,80,140,0.06) !important;
 }
 [data-testid="stMetricValue"] {
-    color: #4dd0e1 !important;
-    font-weight: 700 !important;
+    color: #0055a5 !important;
+    font-weight: 800 !important;
+    font-size: 1.55rem !important;
 }
 [data-testid="stMetricLabel"] {
-    color: #b2dfdb !important;
+    color: #0f3050 !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
 }
 
-/* Dataframe */
+/* ── Info / Success / Error alerts ── */
+div[data-testid="stAlert"] p,
+div[data-testid="stNotification"] p {
+    font-weight: 600 !important;
+    color: #0a2035 !important;
+}
+
+/* ── Spinner text ── */
+[data-testid="stSpinner"] p {
+    color: #0f2a3f !important;
+    font-weight: 600 !important;
+}
+
+/* ── Divider ── */
+hr { border-color: #b0c8dc !important; }
+
+/* ── Dataframe ── */
 [data-testid="stDataFrame"] {
-    border-radius: 10px;
+    border: 1px solid #b8cfe0 !important;
+    border-radius: 10px !important;
     overflow: hidden;
 }
 
-/* Success / info / warning */
-.stSuccess, .stInfo {
-    border-radius: 10px !important;
+/* ── Footer ── */
+.footer-text {
+    text-align: center;
+    color: #3a607a;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
-
-/* Divider colour */
-hr { border-color: rgba(255,255,255,0.1) !important; }
-
-/* Section headers */
-h3 { color: #e0f7fa !important; }
-p, li { color: #cfd8dc !important; }
 </style>
 """, unsafe_allow_html=True)
 
 # ── Header ────────────────────────────────────────────────────────────────────
-st.title("🎲 Thống kê số thuế cơ sở theo Tỉnh")
-st.markdown('<p class="subtitle">Tải lên file Excel → nhận ngay báo cáo tổng hợp số cơ quan của mỗi tỉnh</p>', unsafe_allow_html=True)
+st.title("🎲 Thống kê thuế cơ sở theo Tỉnh")
+st.markdown(
+    '<p class="subtitle">Tải lên file Excel → nhận ngay báo cáo tổng hợp số cơ quan của mỗi tỉnh</p>',
+    unsafe_allow_html=True,
+)
 
 # ── Upload card ───────────────────────────────────────────────────────────────
 st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -142,16 +196,16 @@ uploaded_file = st.file_uploader(
 col_info1, col_info2 = st.columns(2)
 with col_info1:
     st.markdown("""
-    **Yêu cầu file:**
-    - Cột A: Tỉnh
-    - Cột B: Cơ quan
-    """)
+**Yêu cầu file:**
+- Cột A: Tỉnh
+- Cột B: Cơ quan
+""")
 with col_info2:
     st.markdown("""
-    **Xử lý tự động:**
-    - Bỏ qua dòng Tỉnh hoặc Cơ quan trống
-    - Tổng hợp tại cột D & E
-    """)
+**Xử lý tự động:**
+- Bỏ qua dòng Tỉnh hoặc Cơ quan trống
+- Tổng hợp tại cột D & E
+""")
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ── Process ───────────────────────────────────────────────────────────────────
@@ -160,31 +214,28 @@ if uploaded_file is not None:
     output_filename = f"{original_name}_output.xlsx"
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    start_btn = st.button("▶ Bắt đầu xử lý", use_container_width=True)
+    start_btn = st.button("▶  Bắt đầu xử lý", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     if start_btn:
         with st.spinner("⏳ Đang đọc và xử lý dữ liệu…"):
             try:
-                # Read with chunking hint (chunksize not available for xlsx but read_excel is fast enough)
                 df = pd.read_excel(uploaded_file, header=0, dtype=str)
 
-                # Normalise: take only first 2 columns regardless of header name
+                # Lấy 2 cột đầu tiên
                 df = df.iloc[:, :2]
                 df.columns = ["Tinh", "Co_quan"]
-
                 total_rows = len(df)
 
-                # Drop rows where Tinh OR Co_quan is empty/NaN
+                # Lọc dòng hợp lệ
                 df_clean = df.dropna(subset=["Tinh", "Co_quan"])
                 df_clean = df_clean[
                     (df_clean["Tinh"].str.strip() != "") &
                     (df_clean["Co_quan"].str.strip() != "")
                 ].copy()
-
                 skipped = total_rows - len(df_clean)
 
-                # ── Summary: count unique Co_quan per Tinh ──────────────────
+                # Tổng hợp số cơ quan duy nhất theo tỉnh
                 summary = (
                     df_clean.groupby("Tinh", sort=True)["Co_quan"]
                     .nunique()
@@ -193,25 +244,20 @@ if uploaded_file is not None:
                 summary.columns = ["Tỉnh", "Số cơ quan"]
                 summary = summary.sort_values("Tỉnh").reset_index(drop=True)
 
-                # ── Build output Excel ───────────────────────────────────────
+                # Tạo file Excel output
                 output = BytesIO()
                 with pd.ExcelWriter(output, engine="openpyxl") as writer:
-                    # Write original cleaned data to cols A, B (index=False)
                     df_clean.rename(columns={"Tinh": "Tỉnh", "Co_quan": "Cơ quan"}).to_excel(
                         writer, sheet_name="Sheet1", index=False, startrow=0, startcol=0
                     )
-
                     ws = writer.sheets["Sheet1"]
 
-                    # Write summary header to col D (index 3) and E (index 4)
                     ws.cell(row=1, column=4, value="Tỉnh")
                     ws.cell(row=1, column=5, value="Số cơ quan")
-
                     for i, row in summary.iterrows():
                         ws.cell(row=i + 2, column=4, value=row["Tỉnh"])
                         ws.cell(row=i + 2, column=5, value=row["Số cơ quan"])
 
-                    # Auto-fit column widths
                     from openpyxl.utils import get_column_letter
                     for col_idx in range(1, 6):
                         max_len = 0
@@ -232,24 +278,23 @@ if uploaded_file is not None:
                 m3.metric("Dòng bỏ qua", f"{skipped:,}")
                 m4.metric("Số tỉnh", f"{len(summary):,}")
 
-                # ── Preview summary ──────────────────────────────────────────
+                # ── Preview ───────────────────────────────────────────────────
                 st.markdown("### 📋 Bảng tổng hợp")
                 st.dataframe(
                     summary,
                     use_container_width=True,
-                    height=min(400, (len(summary) + 1) * 35 + 3),
+                    height=min(420, (len(summary) + 1) * 35 + 3),
                 )
 
-                # ── Download ─────────────────────────────────────────────────
+                # ── Download ──────────────────────────────────────────────────
                 st.markdown("### 💾 Tải file kết quả")
                 st.download_button(
-                    label=f"⬇ Tải xuống  {output_filename}",
+                    label=f"⬇  Tải xuống  {output_filename}",
                     data=output,
                     file_name=output_filename,
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     use_container_width=True,
                 )
-
                 st.success(f"Đã xử lý thành công! File output: **{output_filename}**")
 
             except Exception as e:
@@ -260,6 +305,6 @@ else:
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("---")
 st.markdown(
-    '<p style="text-align:center; color:#546e7a; font-size:0.8rem;">Thống kê Cơ quan theo Tỉnh · Streamlit App</p>',
+    '<p class="footer-text">Thống kê Cơ quan theo Tỉnh · Streamlit App</p>',
     unsafe_allow_html=True,
 )
