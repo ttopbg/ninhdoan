@@ -209,7 +209,7 @@ st.markdown("""
 
 
 # ─── UPLOAD CARD ─────────────────────────────────────────────────────────────────
-st.markdown('<div class="card">', unsafe_allow_html=True)
+# st.markdown('<div class="card">', unsafe_allow_html=True)
 st.markdown('<div class="section-label">📁 Tải lên file Excel</div>', unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
@@ -227,7 +227,7 @@ if uploaded_file:
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+# st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ─── PROCESS CARD ────────────────────────────────────────────────────────────────
