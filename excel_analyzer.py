@@ -442,9 +442,9 @@ if 'output_data' in st.session_state:
     st.markdown('</div>', unsafe_allow_html=True)
 
 
-# ─── FOOTER ──────────────────────────────────────────────────────────────────────
-st.markdown("""
-<div style="text-align:center; color:#b0b8d0; font-size:0.78rem; padding: 1.5rem 0 0.5rem; font-weight:300;">
-    Thống Kê Tỉnh · Được xây dựng với Streamlit &amp; Pandas
-</div>
-""", unsafe_allow_html=True)
+# # ─── FOOTER ──────────────────────────────────────────────────────────────────────
+# st.markdown("""
+# <div style="text-align:center; color:#b0b8d0; font-size:0.78rem; padding: 1.5rem 0 0.5rem; font-weight:300;">
+#     Thống Kê Tỉnh · Được xây dựng với Streamlit &amp; Pandas
+# </div>
+# """, unsafe_allow_html=True)
