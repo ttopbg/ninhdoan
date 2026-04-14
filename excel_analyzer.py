@@ -15,21 +15,156 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap');
 
-/* Reset & base */
+/* ══════════════════════════════════════════
+   CSS VARIABLES — LIGHT MODE (default)
+   ══════════════════════════════════════════ */
+:root {
+    --bg-app:        #f0f4f8;
+    --bg-app-mid:    #e8f0fe;
+    --bg-app-end:    #f5f0ff;
+
+    --bg-card:       #ffffff;
+    --border-card:   rgba(200, 210, 240, 0.8);
+    --shadow-card:   0 8px 32px rgba(60,80,160,0.10), 0 1.5px 4px rgba(60,80,160,0.05);
+
+    --text-heading:  #1a2540;
+    --text-sub:      #3d4f7a;
+    --text-muted:    #5a6a90;
+    --text-label:    #4a5a8a;
+
+    --accent-blue:   #3a5fd4;
+    --accent-purple: #6b46cc;
+
+    --metric-bg:     linear-gradient(135deg, #dde8ff 0%, #ede5ff 100%);
+    --metric-border: #c0cefc;
+    --metric-val:    #2040a8;
+    --metric-lbl:    #5060a0;
+
+    --msg-info-bg:   #ddeaff;
+    --msg-info-bdr:  #4a6ee0;
+    --msg-info-txt:  #1a3490;
+
+    --msg-ok-bg:     #d4f5e8;
+    --msg-ok-bdr:    #1fa870;
+    --msg-ok-txt:    #0d5c3a;
+
+    --msg-warn-bg:   #fff0d0;
+    --msg-warn-bdr:  #d48a00;
+    --msg-warn-txt:  #7a4a00;
+
+    --upload-bg:     rgba(210,228,255,0.40);
+    --upload-bdr:    #90aae8;
+    --upload-bdr-hv: #4a6ee0;
+
+    --divider:       #c8d4f0;
+    --table-border:  #c0ceee;
+
+    --section-lbl:   #3d5090;
+}
+
+/* ══════════════════════════════════════════
+   CSS VARIABLES — DARK MODE
+   ══════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-app:        #0d1117;
+        --bg-app-mid:    #111827;
+        --bg-app-end:    #130d24;
+
+        --bg-card:       #1a2035;
+        --border-card:   rgba(80, 100, 180, 0.35);
+        --shadow-card:   0 8px 32px rgba(0,0,0,0.40), 0 1.5px 4px rgba(0,0,0,0.30);
+
+        --text-heading:  #e8eeff;
+        --text-sub:      #b8c8f0;
+        --text-muted:    #8898c8;
+        --text-label:    #a0b0e0;
+
+        --accent-blue:   #6a9aff;
+        --accent-purple: #a07aff;
+
+        --metric-bg:     linear-gradient(135deg, #1e2d56 0%, #221845 100%);
+        --metric-border: #2d3f78;
+        --metric-val:    #7ab0ff;
+        --metric-lbl:    #8898c0;
+
+        --msg-info-bg:   #172040;
+        --msg-info-bdr:  #5070d0;
+        --msg-info-txt:  #90b8ff;
+
+        --msg-ok-bg:     #0d2820;
+        --msg-ok-bdr:    #28a870;
+        --msg-ok-txt:    #60e0a8;
+
+        --msg-warn-bg:   #281800;
+        --msg-warn-bdr:  #c07800;
+        --msg-warn-txt:  #ffc040;
+
+        --upload-bg:     rgba(30, 50, 100, 0.40);
+        --upload-bdr:    #3a5090;
+        --upload-bdr-hv: #6a9aff;
+
+        --divider:       #2a3560;
+        --table-border:  #2a3560;
+
+        --section-lbl:   #8898d0;
+    }
+}
+
+/* ══════════════════════════════════════════
+   Streamlit dark-theme class override
+   (khi người dùng chọn dark trong Streamlit)
+   ══════════════════════════════════════════ */
+[data-theme="dark"] {
+    --bg-app:        #0d1117;
+    --bg-app-mid:    #111827;
+    --bg-app-end:    #130d24;
+    --bg-card:       #1a2035;
+    --border-card:   rgba(80, 100, 180, 0.35);
+    --shadow-card:   0 8px 32px rgba(0,0,0,0.40), 0 1.5px 4px rgba(0,0,0,0.30);
+    --text-heading:  #e8eeff;
+    --text-sub:      #b8c8f0;
+    --text-muted:    #8898c8;
+    --text-label:    #a0b0e0;
+    --accent-blue:   #6a9aff;
+    --accent-purple: #a07aff;
+    --metric-bg:     linear-gradient(135deg, #1e2d56 0%, #221845 100%);
+    --metric-border: #2d3f78;
+    --metric-val:    #7ab0ff;
+    --metric-lbl:    #8898c0;
+    --msg-info-bg:   #172040;
+    --msg-info-bdr:  #5070d0;
+    --msg-info-txt:  #90b8ff;
+    --msg-ok-bg:     #0d2820;
+    --msg-ok-bdr:    #28a870;
+    --msg-ok-txt:    #60e0a8;
+    --msg-warn-bg:   #281800;
+    --msg-warn-bdr:  #c07800;
+    --msg-warn-txt:  #ffc040;
+    --upload-bg:     rgba(30, 50, 100, 0.40);
+    --upload-bdr:    #3a5090;
+    --upload-bdr-hv: #6a9aff;
+    --divider:       #2a3560;
+    --table-border:  #2a3560;
+    --section-lbl:   #8898d0;
+}
+
+/* ─── Base ─── */
 html, body, [class*="css"] {
     font-family: 'Be Vietnam Pro', sans-serif;
 }
 
-/* Background */
 .stApp {
-    background: linear-gradient(145deg, #f0f4f8 0%, #e8f0fe 50%, #f5f0ff 100%);
+    background: linear-gradient(145deg,
+        var(--bg-app) 0%,
+        var(--bg-app-mid) 50%,
+        var(--bg-app-end) 100%) !important;
     min-height: 100vh;
 }
 
-/* Hide default streamlit elements */
-#MainMenu, footer, header {visibility: hidden;}
+#MainMenu, footer, header { visibility: hidden; }
 
-/* ── Hero header ── */
+/* ─── Hero ─── */
 .hero {
     text-align: center;
     padding: 2.5rem 1rem 1.5rem;
@@ -37,57 +172,58 @@ html, body, [class*="css"] {
 .hero h1 {
     font-family: 'Playfair Display', serif;
     font-size: 2.4rem;
-    color: #2d3a5e;
+    color: var(--text-heading) !important;
     margin-bottom: 0.3rem;
     letter-spacing: -0.5px;
 }
-.hero p {
-    color: #6b7a99;
+.hero h4 {
+    color: var(--text-sub) !important;
     font-size: 1rem;
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
 }
 
-/* ── Card ── */
+/* ─── Card ─── */
 .card {
-    background: rgba(255,255,255,0.80);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.9);
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-card);
     border-radius: 20px;
     padding: 2rem 2rem 1.6rem;
-    box-shadow: 0 8px 32px rgba(60,80,160,0.08), 0 1.5px 4px rgba(60,80,160,0.04);
+    box-shadow: var(--shadow-card);
     margin-bottom: 1.4rem;
 }
 
-/* ── Section label ── */
+/* ─── Section label ─── */
 .section-label {
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 1.8px;
     text-transform: uppercase;
-    color: #8a96b8;
+    color: var(--section-lbl) !important;
     margin-bottom: 0.6rem;
 }
 
-/* ── File uploader overrides ── */
+/* ─── File uploader ─── */
 [data-testid="stFileUploader"] {
-    border: 2px dashed #b8c4e8 !important;
+    border: 2px dashed var(--upload-bdr) !important;
     border-radius: 14px !important;
-    background: rgba(232,240,254,0.35) !important;
+    background: var(--upload-bg) !important;
     transition: border-color 0.2s;
 }
 [data-testid="stFileUploader"]:hover {
-    border-color: #6b88e6 !important;
+    border-color: var(--upload-bdr-hv) !important;
 }
-[data-testid="stFileUploader"] label {
-    color: #4a5a8a !important;
+[data-testid="stFileUploader"] label,
+[data-testid="stFileUploader"] p,
+[data-testid="stFileUploader"] span {
+    color: var(--text-label) !important;
     font-weight: 500 !important;
 }
 
-/* ── Button ── */
+/* ─── Buttons ─── */
 .stButton > button {
-    background: linear-gradient(135deg, #4f72e3 0%, #7b5cde 100%) !important;
-    color: white !important;
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%) !important;
+    color: #ffffff !important;
     border: none !important;
     border-radius: 12px !important;
     padding: 0.75rem 2.2rem !important;
@@ -101,40 +237,45 @@ html, body, [class*="css"] {
 }
 .stButton > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(79,114,227,0.45) !important;
+    box-shadow: 0 8px 28px rgba(79,114,227,0.50) !important;
+    filter: brightness(1.1) !important;
 }
-.stButton > button:active {
-    transform: translateY(0px) !important;
+.stButton > button:active { transform: translateY(0px) !important; }
+.stButton > button:disabled {
+    opacity: 0.45 !important;
+    filter: grayscale(30%) !important;
 }
 
-/* ── Download button ── */
 [data-testid="stDownloadButton"] > button {
-    background: linear-gradient(135deg, #2ecc8f 0%, #1aa879 100%) !important;
-    color: white !important;
+    background: linear-gradient(135deg, #22c07a 0%, #159a5c 100%) !important;
+    color: #ffffff !important;
     border: none !important;
     border-radius: 12px !important;
     padding: 0.75rem 2rem !important;
     font-family: 'Be Vietnam Pro', sans-serif !important;
     font-weight: 600 !important;
     font-size: 1rem !important;
-    box-shadow: 0 4px 18px rgba(46,204,143,0.30) !important;
+    box-shadow: 0 4px 18px rgba(34,192,122,0.35) !important;
     width: 100% !important;
 }
 [data-testid="stDownloadButton"] > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(46,204,143,0.40) !important;
+    filter: brightness(1.12) !important;
+    box-shadow: 0 8px 24px rgba(34,192,122,0.50) !important;
 }
 
-/* ── Metric cards ── */
+/* ─── Metric boxes ─── */
 .metrics-row {
     display: flex;
     gap: 1rem;
     margin: 1.2rem 0 0.6rem;
+    flex-wrap: wrap;
 }
 .metric-box {
     flex: 1;
-    background: linear-gradient(135deg, #eef2ff 0%, #f5f0ff 100%);
-    border: 1px solid #dde4fc;
+    min-width: 120px;
+    background: var(--metric-bg);
+    border: 1px solid var(--metric-border);
     border-radius: 14px;
     padding: 1rem 1.2rem;
     text-align: center;
@@ -142,58 +283,68 @@ html, body, [class*="css"] {
 .metric-box .val {
     font-size: 1.9rem;
     font-weight: 700;
-    color: #3d56c8;
+    color: var(--metric-val) !important;
     line-height: 1.1;
 }
 .metric-box .lbl {
     font-size: 0.78rem;
-    color: #8a96b8;
+    color: var(--metric-lbl) !important;
     font-weight: 500;
     margin-top: 0.2rem;
     letter-spacing: 0.4px;
 }
 
-/* ── Status messages ── */
+/* ─── Status messages ─── */
 .msg-info {
-    background: #eef2ff;
-    border-left: 4px solid #6b88e6;
+    background: var(--msg-info-bg) !important;
+    border-left: 4px solid var(--msg-info-bdr);
     border-radius: 8px;
     padding: 0.8rem 1rem;
-    color: #3d56c8;
+    color: var(--msg-info-txt) !important;
     font-size: 0.9rem;
     margin: 0.8rem 0;
 }
-.msg-success {
-    background: #eafaf4;
-    border-left: 4px solid #2ecc8f;
-    border-radius: 8px;
-    padding: 0.8rem 1rem;
-    color: #1a8a60;
-    font-size: 0.9rem;
-    margin: 0.8rem 0;
-}
-.msg-warn {
-    background: #fff8ec;
-    border-left: 4px solid #f0a500;
-    border-radius: 8px;
-    padding: 0.8rem 1rem;
-    color: #9a6700;
-    font-size: 0.9rem;
-    margin: 0.8rem 0;
-}
+.msg-info strong { color: var(--msg-info-txt) !important; }
 
-/* ── Table ── */
+.msg-success {
+    background: var(--msg-ok-bg) !important;
+    border-left: 4px solid var(--msg-ok-bdr);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    color: var(--msg-ok-txt) !important;
+    font-size: 0.9rem;
+    margin: 0.8rem 0;
+}
+.msg-success strong { color: var(--msg-ok-txt) !important; }
+
+.msg-warn {
+    background: var(--msg-warn-bg) !important;
+    border-left: 4px solid var(--msg-warn-bdr);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    color: var(--msg-warn-txt) !important;
+    font-size: 0.9rem;
+    margin: 0.8rem 0;
+}
+.msg-warn strong { color: var(--msg-warn-txt) !important; }
+
+/* ─── Table ─── */
 [data-testid="stDataFrame"] {
     border-radius: 12px !important;
     overflow: hidden !important;
-    border: 1px solid #e2e8f8 !important;
+    border: 1px solid var(--table-border) !important;
 }
 
-/* ── Divider ── */
+/* ─── Divider ─── */
 hr {
     border: none;
-    border-top: 1px solid #e4e9f5;
+    border-top: 1px solid var(--divider);
     margin: 1.2rem 0;
+}
+
+/* ─── Streamlit default text colour fix ─── */
+.stMarkdown p, .stMarkdown span, .stMarkdown div {
+    color: var(--text-sub);
 }
 </style>
 """, unsafe_allow_html=True)
