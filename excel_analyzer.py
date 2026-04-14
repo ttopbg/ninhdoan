@@ -5,8 +5,8 @@ from io import BytesIO
 
 # ─── PAGE CONFIG ────────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Thống Kê Tỉnh",
-    page_icon="📊",
+    page_title="Thống kê của Ninh Đoàng",
+    page_icon="🧋",
     layout="centered",
 )
 
@@ -202,8 +202,8 @@ hr {
 # ─── HERO ────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
-    <h1>📊 Thống Kê Theo Tỉnh</h1>
-    <p>Tổng hợp dữ liệu Cơ sở & Doanh nghiệp từ file Excel</p>
+    <h1>🙇 Thống kê thuế cơ sở và DN</h1>
+    <p>Tổng hợp dữ liệu thuế cơ sở & Doanh nghiệp từ file Excel</p>
 </div>
 """, unsafe_allow_html=True)
 
