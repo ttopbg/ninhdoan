@@ -185,7 +185,7 @@ st.markdown(
 )
 
 # ── Upload card ───────────────────────────────────────────────────────────────
-st.markdown('<div class="card">', unsafe_allow_html=True)
+# st.markdown('<div class="card">', unsafe_allow_html=True)
 st.markdown("### 📁 Chọn file Excel đầu vào")
 uploaded_file = st.file_uploader(
     label="Kéo thả hoặc Browse file (.xlsx / .xls)",
@@ -203,10 +203,10 @@ with col_info1:
 with col_info2:
     st.markdown("""
 **Xử lý tự động:**
-- Bỏ qua dòng Tỉnh hoặc Cơ quan trống
+- Bỏ qua dòng Tỉnh hoặc cơ sở trống
 - Tổng hợp tại cột D & E
 """)
-st.markdown('</div>', unsafe_allow_html=True)
+# st.markdown('</div>', unsafe_allow_html=True)
 
 # ── Process ───────────────────────────────────────────────────────────────────
 if uploaded_file is not None:
