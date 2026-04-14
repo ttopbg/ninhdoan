@@ -6,7 +6,7 @@ from io import BytesIO
 # ─── PAGE CONFIG ────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Thống kê của Ninh Đoàng",
-    page_icon="🧋",
+    page_icon="🍹",
     layout="centered",
 )
 
@@ -202,8 +202,8 @@ hr {
 # ─── HERO ────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
-    <h1>🙇 Thống kê thuế cơ sở và DN</h1>
-    <p>Tổng hợp dữ liệu thuế cơ sở & Doanh nghiệp từ file Excel</p>
+    <h1>🧋 Thống kê theo Tỉnh</h1>
+    <p>Tổng hợp dữ liệu thuế cơ sở & Doanh nghiệp</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -259,115 +259,113 @@ if run_btn and uploaded_file:
             df = df.dropna(subset=[col_tinh, col_co_so, col_dn])
             dropped = total_rows - len(df)
 
-            # ── Convert numeric columns ──
-            df[col_co_so] = pd.to_numeric(df[col_co_so], errors='coerce')
-            df[col_dn]    = pd.to_numeric(df[col_dn],    errors='coerce')
-            df = df.dropna(subset=[col_co_so, col_dn])
-
-            # ── Build summary ──
+            # ── Build summary: đếm số dòng theo tỉnh ──
+            # Số cơ sở  = số dòng có giá trị cột B thuộc tỉnh đó
+            # Số doanh nghiệp = số dòng có giá trị cột C thuộc tỉnh đó
             summary = (
                 df.groupby(col_tinh, sort=True)
                   .agg(
-                      so_co_so=(col_co_so, 'sum'),
-                      so_dn=(col_dn, 'sum'),
+                      so_co_so=(col_co_so, 'count'),
+                      so_dn=(col_dn, 'count'),
                   )
                   .reset_index()
             )
             summary.columns = ['Tỉnh', 'Số Cơ Sở', 'Số Doanh Nghiệp']
-            summary['Số Cơ Sở']       = summary['Số Cơ Sở'].astype(int)
-            summary['Số Doanh Nghiệp'] = summary['Số Doanh Nghiệp'].astype(int)
 
-            # ── Build output Excel ──
-            # Original data keeps all original columns
-            df_out = df_raw.copy()
+            # ── Build output: chỉ đúng 3 cột gốc + D trống + E/F/G thống kê ──
+            df_out = df_raw[[col_tinh, col_co_so, col_dn]].copy()
+            df_out.columns = ['Tỉnh', 'Cơ Sở', 'Doanh Nghiệp']
 
-            # Ensure columns E, F, G exist (index 4, 5, 6)
-            while len(df_out.columns) < 4:
-                df_out[f'_col{len(df_out.columns)}'] = pd.NA
+            n_rows    = len(df_out)
+            n_summary = len(summary)
 
-            # Add blank column D if not present
-            if len(df_out.columns) == 3:
-                df_out.insert(3, '_blank', pd.NA)
+            # Chuẩn bị giá trị cột E, F, G (chỉ điền đến hết summary, còn lại None)
+            e_vals = [None] * n_rows
+            f_vals = [None] * n_rows
+            g_vals = [None] * n_rows
+            for i in range(min(n_summary, n_rows)):
+                e_vals[i] = summary.iloc[i]['Tỉnh']
+                f_vals[i] = int(summary.iloc[i]['Số Cơ Sở'])
+                g_vals[i] = int(summary.iloc[i]['Số Doanh Nghiệp'])
 
-            # Add E, F, G columns with headers
-            df_out['Tỉnh (tổng hợp)']  = pd.NA
-            df_out['Số Cơ Sở']         = pd.NA
-            df_out['Số Doanh Nghiệp']  = pd.NA
+            # ── Save to BytesIO — ghi thủ công bằng openpyxl để kiểm soát cột D ──
+            from openpyxl import Workbook
+            from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
 
-            e_col = df_out.columns[-3]
-            f_col = df_out.columns[-2]
-            g_col = df_out.columns[-1]
+            wb = Workbook()
+            ws = wb.active
+            ws.title = 'Data'
 
-            # Fill summary values starting from row 0 (header already set by column names)
-            for i, row in summary.iterrows():
-                if i < len(df_out):
-                    df_out.at[i, e_col] = row['Tỉnh']
-                    df_out.at[i, f_col] = row['Số Cơ Sở']
-                    df_out.at[i, g_col] = row['Số Doanh Nghiệp']
+            # ---- Header row ----
+            headers = {
+                1: ('Tỉnh',          '4F72E3'),
+                2: ('Cơ Sở',         '4F72E3'),
+                3: ('Doanh Nghiệp',  '4F72E3'),
+                4: (None,            None),       # D trống
+                5: ('Tỉnh (TH)',     '7B5CDE'),
+                6: ('Số Cơ Sở',      '7B5CDE'),
+                7: ('Số DN',         '7B5CDE'),
+            }
+            hdr_font  = Font(color='FFFFFF', bold=True, name='Calibri', size=11)
+            ctr_align = Alignment(horizontal='center', vertical='center')
 
-            # ── Save to BytesIO ──
-            output_buffer = BytesIO()
-            with pd.ExcelWriter(output_buffer, engine='openpyxl') as writer:
-                df_out.to_excel(writer, index=False, sheet_name='Data')
+            for col_idx, (label, color) in headers.items():
+                cell = ws.cell(row=1, column=col_idx, value=label)
+                if color:
+                    cell.fill = PatternFill(start_color=color, end_color=color, fill_type='solid')
+                    cell.font = hdr_font
+                    cell.alignment = ctr_align
 
-                # Style the output
-                workbook  = writer.book
-                worksheet = writer.sheets['Data']
+            # ---- Data rows ----
+            alt_fill     = PatternFill(start_color='F0F4FF', end_color='F0F4FF', fill_type='solid')
+            sum_data_fill= PatternFill(start_color='F5F0FF', end_color='F5F0FF', fill_type='solid')
+            thin_border  = Border(
+                left=Side(style='thin', color='DDEAFF'),
+                right=Side(style='thin', color='DDEAFF'),
+                bottom=Side(style='thin', color='DDEAFF'),
+            )
 
-                from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
-                from openpyxl.utils import get_column_letter
+            # Ghi nhanh toàn bộ dữ liệu bằng ws.append (tối ưu cho 60k dòng)
+            tinh_vals_list = df_out['Tỉnh'].tolist()
+            coso_vals_list = df_out['Cơ Sở'].tolist()
+            dn_vals_list   = df_out['Doanh Nghiệp'].tolist()
 
-                # Header row style
-                header_fill = PatternFill(start_color="4F72E3", end_color="4F72E3", fill_type="solid")
-                summary_fill = PatternFill(start_color="7B5CDE", end_color="7B5CDE", fill_type="solid")
-                header_font = Font(color="FFFFFF", bold=True, name='Calibri', size=11)
-                center_align = Alignment(horizontal='center', vertical='center')
-                thin_border = Border(
-                    left=Side(style='thin', color='DDEAFF'),
-                    right=Side(style='thin', color='DDEAFF'),
-                    bottom=Side(style='thin', color='DDEAFF'),
+            for i in range(n_rows):
+                ws.append([tinh_vals_list[i], coso_vals_list[i], dn_vals_list[i],
+                           None, e_vals[i], f_vals[i], g_vals[i]])
+
+            # Áp style cho ~500 dòng đầu (style toàn bộ 60k dòng sẽ rất chậm)
+            style_limit = min(n_rows + 2, 502)
+            for r in range(2, style_limit):
+                for col_idx in range(1, 8):
+                    if col_idx == 4:
+                        continue
+                    cell = ws.cell(row=r, column=col_idx)
+                    cell.border = thin_border
+                    cell.alignment = Alignment(vertical='center')
+                    if r % 2 == 0:
+                        cell.fill = sum_data_fill if col_idx >= 5 else alt_fill
+
+            # ---- Column widths ----
+            for col_idx in range(1, 8):
+                col_letter = get_column_letter(col_idx)
+                if col_idx == 4:
+                    ws.column_dimensions[col_letter].width = 3
+                    continue
+                max_len = max(
+                    (len(str(ws.cell(row=r, column=col_idx).value or ''))
+                     for r in range(1, min(n_rows + 2, 500))),
+                    default=10
                 )
+                ws.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 40)
 
-                num_cols = len(df_out.columns)
-                for col_idx in range(1, num_cols + 1):
-                    cell = worksheet.cell(row=1, column=col_idx)
-                    if col_idx <= num_cols - 3:
-                        cell.fill = header_fill
-                    else:
-                        cell.fill = summary_fill
-                    cell.font = header_font
-                    cell.alignment = center_align
+            ws.freeze_panes = 'A2'
 
-                # Data rows alternate fill
-                alt_fill = PatternFill(start_color="F0F4FF", end_color="F0F4FF", fill_type="solid")
-                summary_data_fill = PatternFill(start_color="F5F0FF", end_color="F5F0FF", fill_type="solid")
-
-                for row_idx in range(2, len(df_out) + 2):
-                    for col_idx in range(1, num_cols + 1):
-                        cell = worksheet.cell(row=row_idx, column=col_idx)
-                        cell.border = thin_border
-                        cell.alignment = Alignment(vertical='center')
-                        if row_idx % 2 == 0:
-                            if col_idx > num_cols - 3:
-                                cell.fill = summary_data_fill
-                            else:
-                                cell.fill = alt_fill
-
-                # Auto-fit columns
-                for col_idx in range(1, num_cols + 1):
-                    col_letter = get_column_letter(col_idx)
-                    max_len = 0
-                    for row_idx in range(1, min(len(df_out) + 2, 500)):
-                        val = worksheet.cell(row=row_idx, column=col_idx).value
-                        if val:
-                            max_len = max(max_len, len(str(val)))
-                    worksheet.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 40)
-
-                # Freeze header
-                worksheet.freeze_panes = 'A2'
+            output_buffer = BytesIO()
+            wb.save(output_buffer)
 
             output_buffer.seek(0)
-
             # ── Output filename ──
             base_name = os.path.splitext(uploaded_file.name)[0]
             output_filename = f"{base_name}_output.xlsx"
