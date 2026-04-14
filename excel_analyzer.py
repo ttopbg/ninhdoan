@@ -231,7 +231,7 @@ if uploaded_file:
 
 
 # ─── PROCESS CARD ────────────────────────────────────────────────────────────────
-st.markdown('<div class="card">', unsafe_allow_html=True)
+# st.markdown('<div class="card">', unsafe_allow_html=True)
 st.markdown('<div class="section-label">⚙️ Xử lý dữ liệu</div>', unsafe_allow_html=True)
 
 run_btn = st.button("🚀 Bắt đầu thống kê", disabled=(uploaded_file is None))
@@ -384,7 +384,7 @@ if run_btn and uploaded_file:
         except Exception as e:
             st.markdown(f'<div class="msg-warn">❌ Lỗi xử lý file: <strong>{e}</strong></div>', unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+# st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ─── RESULTS ─────────────────────────────────────────────────────────────────────
