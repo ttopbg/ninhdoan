@@ -5,8 +5,8 @@ from io import BytesIO
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Thống kê Cơ quan theo Tỉnh",
-    page_icon="📊",
+    page_title="Thống kê thuế cơ sở",
+    page_icon="🌚",
     layout="centered",
 )
 
@@ -127,7 +127,7 @@ p, li { color: #cfd8dc !important; }
 """, unsafe_allow_html=True)
 
 # ── Header ────────────────────────────────────────────────────────────────────
-st.title("📊 Thống kê Cơ quan theo Tỉnh")
+st.title("🎲 Thống kê số thuế cơ sở theo Tỉnh")
 st.markdown('<p class="subtitle">Tải lên file Excel → nhận ngay báo cáo tổng hợp số cơ quan của mỗi tỉnh</p>', unsafe_allow_html=True)
 
 # ── Upload card ───────────────────────────────────────────────────────────────
@@ -235,9 +235,7 @@ if uploaded_file is not None:
                 # ── Preview summary ──────────────────────────────────────────
                 st.markdown("### 📋 Bảng tổng hợp")
                 st.dataframe(
-                    summary.style.background_gradient(
-                        subset=["Số cơ quan"], cmap="Blues"
-                    ),
+                    summary,
                     use_container_width=True,
                     height=min(400, (len(summary) + 1) * 35 + 3),
                 )
