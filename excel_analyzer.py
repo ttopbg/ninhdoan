@@ -203,7 +203,7 @@ hr {
 st.markdown("""
 <div class="hero">
     <h1>🧋 Thống kê theo Tỉnh</h1>
-    <h2>Tổng hợp dữ liệu thuế cơ sở & Doanh nghiệp</h2>
+    <h4>Tổng hợp dữ liệu thuế cơ sở & Doanh nghiệp</h4>
 </div>
 """, unsafe_allow_html=True)
 
