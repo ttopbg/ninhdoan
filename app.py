@@ -6,7 +6,7 @@ from io import BytesIO
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Thống kê thuế cơ sở",
-    page_icon="🌚",
+    page_icon="🍹",
     layout="centered",
 )
 
@@ -178,7 +178,7 @@ hr { border-color: #b0c8dc !important; }
 """, unsafe_allow_html=True)
 
 # ── Header ────────────────────────────────────────────────────────────────────
-st.title("🎲 Thống kê thuế cơ sở theo Tỉnh")
+st.title("🧋 Thống kê thuế cơ sở theo Tỉnh")
 st.markdown(
     '<p class="subtitle">Tải lên file Excel → nhận ngay báo cáo tổng hợp số cơ quan của mỗi tỉnh</p>',
     unsafe_allow_html=True,
@@ -203,10 +203,10 @@ with col_info1:
 with col_info2:
     st.markdown("""
 **Xử lý tự động:**
-- Bỏ qua dòng Tỉnh hoặc cơ sở trống
+- Bỏ qua dòng Tỉnh hoặc Cơ quan trống
 - Tổng hợp tại cột D & E
 """)
-# st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ── Process ───────────────────────────────────────────────────────────────────
 if uploaded_file is not None:
@@ -215,12 +215,14 @@ if uploaded_file is not None:
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     start_btn = st.button("▶  Bắt đầu xử lý", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # st.markdown('</div>', unsafe_allow_html=True)
 
     if start_btn:
         with st.spinner("⏳ Đang đọc và xử lý dữ liệu…"):
             try:
-                df = pd.read_excel(uploaded_file, header=0, dtype=str)
+                ext = os.path.splitext(uploaded_file.name)[1].lower()
+                engine = "xlrd" if ext == ".xls" else "openpyxl"
+                df = pd.read_excel(uploaded_file, header=0, dtype=str, engine=engine)
 
                 # Lấy 2 cột đầu tiên
                 df = df.iloc[:, :2]
