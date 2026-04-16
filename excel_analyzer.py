@@ -52,7 +52,7 @@ st.markdown("""
     --msg-warn-bdr:  #d48a00;
     --msg-warn-txt:  #7a4a00;
 
-    --upload-bg:     rgba(210,228,255,0.40);
+    --upload-bg:     rgba(210,228,255,0.70);
     --upload-bdr:    #90aae8;
     --upload-bdr-hv: #4a6ee0;
 
@@ -168,7 +168,7 @@ html, body, [class*="css"] {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(255, 252, 248, 0.62);
+    background: rgba(255, 252, 248, 0.80);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     z-index: 0;
